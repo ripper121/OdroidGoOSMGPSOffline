@@ -28,3 +28,6 @@ Now the area of the map you want to Export is set.
 
 
 Forum Thread: https://forum.odroid.com/viewtopic.php?f=162&t=33629
+
+Download Tools: https://drive.google.com/open?id=18JUOutDZzVzfiJgyUtiNcj4cO6Xv8Wn8
+Download TILES (sample set): https://drive.google.com/open?id=1ng5wpFVR5ual7zt3KRj-fZQsR8js7pFB

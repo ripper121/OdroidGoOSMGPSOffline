@@ -1,0 +1,13 @@
+C:\Users\sts\source\repos\TileDownloader\TileDownloader\bin\Release\TileDownloader.exe.config
+C:\Users\sts\source\repos\TileDownloader\TileDownloader\bin\Release\TileDownloader.exe
+C:\Users\sts\source\repos\TileDownloader\TileDownloader\bin\Release\TileDownloader.pdb
+C:\Users\sts\source\repos\TileDownloader\TileDownloader\obj\Release\TileDownloader.csproj.CoreCompileInputs.cache
+C:\Users\sts\source\repos\TileDownloader\TileDownloader\obj\Release\TileDownloader.exe
+C:\Users\sts\source\repos\TileDownloader\TileDownloader\obj\Release\TileDownloader.pdb
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\bin\Release\TileDownloader.exe.config
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\bin\Release\TileDownloader.exe
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\bin\Release\TileDownloader.pdb
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\obj\Release\TileDownloader.csprojAssemblyReference.cache
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\obj\Release\TileDownloader.csproj.CoreCompileInputs.cache
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\obj\Release\TileDownloader.exe
+C:\Users\sts\Documents\GitHub\OdroidGoOSMGPSOffline\TileDownloader\src\TileDownloader\obj\Release\TileDownloader.pdb

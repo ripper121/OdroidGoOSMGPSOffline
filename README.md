@@ -10,19 +10,19 @@ ODROID-GO Header(P2)
 How to generate Tiles (offline Map) for your Area:
 
 URL:
-- URL TileServer
+-URL TileServer
 
 Zoom Leve:
-- z ZOOM
+-z ZOOM
 
 Bounding Box:
 left bottom
-- left >min-longitude
-- bottom >min-latitude
+-left >min-longitude
+-bottom >min-latitude
 
 right top
-- right >max-longitude
-- top >max-latitude
+-right >max-longitude
+-top >max-latitude
 
 Example >>
 `TileDownloader.exe -URL https://a.tile.openstreetmap.org/${z}/${x}/${y}.png -z 5 -left -0.489 -botton 51.28 -right 0.236 -top 51.686`

@@ -5,7 +5,7 @@ GPS Module Connection (Neo-6M Module)
 
 GND|TX|RX|VCC
 
-GND|04|05|P3V3
+GND|04|15|P3V3
 
 ODROID-GO Header(P2)
 

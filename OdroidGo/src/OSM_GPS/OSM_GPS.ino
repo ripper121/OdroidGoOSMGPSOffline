@@ -8,7 +8,7 @@ FuGPS fuGPS(in);
 #define TILE_SIZE 240
 
 bool gpsAlive = false;
-double zoom = 10;
+double zoom = 16;
 double lat_rad = 0, lon_deg = 0;
 double tileX = 0, tileY = 0, tileX_Off = 0, tileY_Off = 0;
 double old_lat_rad = 0, old_lon_deg = 0;
@@ -29,6 +29,11 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(115200);
   GO.begin();
+  GO.Speaker.setVolume(0);
+  pinMode(25, OUTPUT);
+  digitalWrite(25, LOW);
+  pinMode(26, OUTPUT);
+  digitalWrite(26, LOW);
   in.begin(9600, SERIAL_8N1, 15, 4);
   fuGPS.sendCommand(FUGPS_PMTK_SET_NMEA_UPDATERATE_1HZ);
   fuGPS.sendCommand(FUGPS_PMTK_API_SET_NMEA_OUTPUT_RMCGGA);
@@ -128,8 +133,8 @@ void loop()
     tileY_Off = 1000;
   if (tileY_Off < -1000)
     tileY_Off = -1000;
-  if (zoom > 16)
-    zoom = 16;
+  if (zoom > 17)
+    zoom = 17;
   if (zoom < 5)
     zoom = 5;
   if (brightness > 254)
@@ -213,14 +218,10 @@ void loop()
     }
     GO.lcd.fillRect(0, 0, abs(DISPLAY_WIDTH - TILE_SIZE), DISPLAY_HEIGHT, BLACK);
     GO.lcd.setCursor(0, 0);
-    GO.lcd.println("Battery:");
-    GO.lcd.println(String(GO.battery.getPercentage()) + "%");
-    GO.lcd.println("GPS Fix:");
-    GO.lcd.println(fuGPS.hasFix());
-    GO.lcd.println("Quality:");
-    GO.lcd.println(fuGPS.Quality);
-    GO.lcd.println("Satellites:");
-    GO.lcd.println(fuGPS.Satellites);
+    GO.lcd.println("Battery:" + String(GO.battery.getPercentage()) + "%");
+    GO.lcd.println("GPS Fix:" + String(fuGPS.hasFix()));
+    GO.lcd.println("Quality:" + String(fuGPS.Quality));
+    GO.lcd.println("Satell.:" + String(fuGPS.Satellites));
     GO.lcd.println("Accuracy:");
     GO.lcd.println(fuGPS.Accuracy);
     GO.lcd.println("Altitude:");
@@ -235,8 +236,21 @@ void loop()
     GO.lcd.println(String(tileX_Off));
     GO.lcd.println("tileYOff:");
     GO.lcd.println(String(tileY_Off));
+    GO.lcd.println("Speed:");
+    GO.lcd.println(fuGPS.Speed);
+    //GO.lcd.println("Course:");
+    //GO.lcd.println(fuGPS.Course);
     GO.lcd.println("Time:");
     GO.lcd.println(String(fuGPS.Hours) + ":" + String(fuGPS.Minutes) + ":" + String(fuGPS.Seconds));
+    GO.lcd.println("");
+    GO.lcd.setTextSize(4);
+    GO.lcd.setTextColor(GREEN);
+    if (fuGPS.Speed*1.852 < 10)
+      GO.lcd.println(fuGPS.Speed*1.852, 1);
+    else
+      GO.lcd.println(fuGPS.Speed*1.852, 0);
+    GO.lcd.setTextSize(1);
+    GO.lcd.setTextColor(WHITE);
 
     Serial.println(String(tileX, 6));
     Serial.println(String(tileY, 6));

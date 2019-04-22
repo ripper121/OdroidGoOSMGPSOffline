@@ -29,6 +29,11 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(115200);
   GO.begin();
+  GO.Speaker.setVolume(0);
+  pinMode(25, OUTPUT);
+  digitalWrite(25, LOW);
+  pinMode(26, OUTPUT);
+  digitalWrite(26, LOW);
   in.begin(9600, SERIAL_8N1, 15, 4);
   fuGPS.sendCommand(FUGPS_PMTK_SET_NMEA_UPDATERATE_1HZ);
   fuGPS.sendCommand(FUGPS_PMTK_API_SET_NMEA_OUTPUT_RMCGGA);

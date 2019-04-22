@@ -8,7 +8,7 @@ FuGPS fuGPS(in);
 #define TILE_SIZE 240
 
 bool gpsAlive = false;
-double zoom = 10;
+double zoom = 16;
 double lat_rad = 0, lon_deg = 0;
 double tileX = 0, tileY = 0, tileX_Off = 0, tileY_Off = 0;
 double old_lat_rad = 0, old_lon_deg = 0;
@@ -133,8 +133,8 @@ void loop()
     tileY_Off = 1000;
   if (tileY_Off < -1000)
     tileY_Off = -1000;
-  if (zoom > 16)
-    zoom = 16;
+  if (zoom > 17)
+    zoom = 17;
   if (zoom < 5)
     zoom = 5;
   if (brightness > 254)

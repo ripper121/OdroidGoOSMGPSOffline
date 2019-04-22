@@ -145,16 +145,16 @@ void loop()
 {
   GO.update();
   if (GO.JOY_Y.wasAxisPressed() == 2) {
-    tileY_Off--;
+    tileY_Off -= 0.5;
   }
   if (GO.JOY_Y.wasAxisPressed() == 1) {
-    tileY_Off++;
+    tileY_Off += 0.5;
   }
   if (GO.JOY_X.wasAxisPressed() == 2) {
-    tileX_Off--;
+    tileX_Off -= 0.5;
   }
   if (GO.JOY_X.wasAxisPressed() == 1) {
-    tileX_Off++;
+    tileX_Off += 0.5;
   }
 
   if (GO.BtnA.wasPressed() == 1) {

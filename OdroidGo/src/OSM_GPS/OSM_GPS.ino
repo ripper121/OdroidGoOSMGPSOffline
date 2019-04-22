@@ -218,14 +218,10 @@ void loop()
     }
     GO.lcd.fillRect(0, 0, abs(DISPLAY_WIDTH - TILE_SIZE), DISPLAY_HEIGHT, BLACK);
     GO.lcd.setCursor(0, 0);
-    GO.lcd.println("Battery:");
-    GO.lcd.println(String(GO.battery.getPercentage()) + "%");
-    GO.lcd.println("GPS Fix:");
-    GO.lcd.println(fuGPS.hasFix());
-    GO.lcd.println("Quality:");
-    GO.lcd.println(fuGPS.Quality);
-    GO.lcd.println("Satellites:");
-    GO.lcd.println(fuGPS.Satellites);
+    GO.lcd.println("Battery:" + String(GO.battery.getPercentage()) + "%");
+    GO.lcd.println("GPS Fix:" + String(fuGPS.hasFix()));
+    GO.lcd.println("Quality:" + String(fuGPS.Quality));
+    GO.lcd.println("Satell.:" + String(fuGPS.Satellites));
     GO.lcd.println("Accuracy:");
     GO.lcd.println(fuGPS.Accuracy);
     GO.lcd.println("Altitude:");
@@ -242,10 +238,19 @@ void loop()
     GO.lcd.println(String(tileY_Off));
     GO.lcd.println("Speed:");
     GO.lcd.println(fuGPS.Speed);
-    GO.lcd.println("Course:");
-    GO.lcd.println(fuGPS.Course);
+    //GO.lcd.println("Course:");
+    //GO.lcd.println(fuGPS.Course);
     GO.lcd.println("Time:");
     GO.lcd.println(String(fuGPS.Hours) + ":" + String(fuGPS.Minutes) + ":" + String(fuGPS.Seconds));
+    GO.lcd.println("");
+    GO.lcd.setTextSize(4);
+    GO.lcd.setTextColor(GREEN);
+    if (fuGPS.Speed*1.852 < 10)
+      GO.lcd.println(fuGPS.Speed*1.852, 1);
+    else
+      GO.lcd.println(fuGPS.Speed*1.852, 0);
+    GO.lcd.setTextSize(1);
+    GO.lcd.setTextColor(WHITE);
 
     Serial.println(String(tileX, 6));
     Serial.println(String(tileY, 6));

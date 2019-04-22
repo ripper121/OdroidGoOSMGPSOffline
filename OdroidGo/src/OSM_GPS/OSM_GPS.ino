@@ -240,6 +240,10 @@ void loop()
     GO.lcd.println(String(tileX_Off));
     GO.lcd.println("tileYOff:");
     GO.lcd.println(String(tileY_Off));
+    GO.lcd.println("Speed:");
+    GO.lcd.println(fuGPS.Speed);
+    GO.lcd.println("Course:");
+    GO.lcd.println(fuGPS.Course);
     GO.lcd.println("Time:");
     GO.lcd.println(String(fuGPS.Hours) + ":" + String(fuGPS.Minutes) + ":" + String(fuGPS.Seconds));
 

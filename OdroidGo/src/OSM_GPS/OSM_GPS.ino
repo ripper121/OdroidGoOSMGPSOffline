@@ -5,7 +5,8 @@ FuGPS fuGPS(in);
 
 #define DISPLAY_WIDTH 320
 #define DISPLAY_HEIGHT 240
-#define TILE_SIZE 240
+#define DISPLAY_SIZE   240
+#define TILE_SIZE 256
 
 bool gpsAlive = false;
 double zoom = 16;
@@ -29,6 +30,10 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(115200);
   GO.begin();
+  for (int i=0;i<3;i++) {
+    delay(500);
+    Serial.printf("Booting...%d\n", i);
+  }
   GO.Speaker.setVolume(0);
   pinMode(25, OUTPUT);
   digitalWrite(25, LOW);
@@ -84,6 +89,55 @@ void setup()
   GO.lcd.clear();
   GO.lcd.setCursor(0, 0);
   GO.lcd.println("Wait for GPS...");
+}
+
+// draws tile(s) to display at tileX and tileY. It may load one, two X,
+// two Y, or four images (total of 4 possibilities):
+//   - @0,0  : img(x,y)@0,0-239,239
+//   - @0,0  : img(x,y)@128,0-255,239
+//     @128,0: img(x+1,y)@0,0-111,239
+//   - @0,0  : img(x,y)@0,128-239,255
+//     @0,128: img(x,y+1)@0,0-239,111
+//   - @0,0    : img(x,y)@128,128-255,255
+//     @128,0  : img(x+1,y)@0,128-111,255
+//     @0,128  : img(x,y+1)@128,0-255,111
+//     @128,128: img(x+1,y+1)@0,0-111,111
+static void drawTile(double tileX, double tileY)
+{
+    int x, y;
+
+    tileX += tileX_Off;
+    tileY += tileY_Off;
+    tileX = int(tileX * 2 - 1) / 2.0;
+    tileY = int(tileY * 2) / 2.0;
+    //redraw only when something has changed
+    if (old_tileX == tileX && old_tileY == tileY && old_zoom == zoom)
+        return;
+
+    old_tileX = tileX;
+    old_tileY = tileY;
+
+    // draw the 4 quadrants
+    GO.lcd.clear();
+    for (y = 0; y < DISPLAY_SIZE; y += TILE_SIZE/2) {
+      for (x = 0; x < DISPLAY_SIZE; x += TILE_SIZE/2) {
+        String path = "/TILES/" + String(uint16_t(zoom)) + "/" + String(uint32_t(tileX + (double)x / DISPLAY_SIZE)) + "/" + String(uint32_t(tileY + (double)y / DISPLAY_SIZE)) + ".jpg";
+        Serial.println(path);
+        if (SD.exists(path)) {
+          Serial.println("File found");
+          GO.lcd.setCursor(0, 0);
+          //drawJpgFile(fs::FS &fs, const char *path, uint16_t x = 0, uint16_t y = 0, uint16_t maxWidth = 0, uint16_t maxHeight = 0, uint16_t offX = 0, uint16_t offY = 0, jpeg_div_t scale = JPEG_DIV_NONE),
+          //GO.lcd.drawJpgFile(SD, path.c_str(), (abs(DISPLAY_WIDTH - DISPLAY_SIZE)));
+          GO.lcd.drawJpgFile(SD, path.c_str(), x + DISPLAY_WIDTH - DISPLAY_SIZE, y,
+                             x ? DISPLAY_SIZE-TILE_SIZE/2 : TILE_SIZE/2,
+                             y ? DISPLAY_SIZE-TILE_SIZE/2 : TILE_SIZE/2,
+                             int(x+tileX*TILE_SIZE)%TILE_SIZE,
+                             int(y+tileY*TILE_SIZE)%TILE_SIZE);
+        } else {
+          Serial.println("File not found : " + path);
+        }
+      }
+    }
 }
 
 //setBrightness(uint8_t brightness),
@@ -193,30 +247,34 @@ void loop()
     //fractional part is the position of the your coordinats in the tile
     posX = modf(tileX , &intpart);
     posY = modf(tileY , &intpart);
-    posX = (posX * TILE_SIZE) + (abs(DISPLAY_WIDTH - TILE_SIZE));
+    posX = (posX * TILE_SIZE) + (abs(DISPLAY_WIDTH - DISPLAY_SIZE));
     posY = (posY * TILE_SIZE);
 
-    //redraw only when something has changed
-    if (uint16_t(old_tileX) != uint16_t(tileX) || uint16_t(old_tileY) != uint16_t(tileY)  || old_zoom != zoom || old_tileX_Off != tileX_Off || old_tileY_Off != tileY_Off) {
-      String path = "/TILES/" + String(uint16_t(zoom)) + "/" + String(uint32_t(tileX + tileX_Off)) + "/" + String(uint32_t(tileY + tileY_Off)) + ".jpg";
-      Serial.println(path);
-      if (SD.exists(path)) {
-        Serial.println("File found.");
-        GO.lcd.clear();
-        GO.lcd.setCursor(0, 0);
-        //drawJpgFile(fs::FS &fs, const char *path, uint16_t x = 0, uint16_t y = 0, uint16_t maxWidth = 0, uint16_t maxHeight = 0, uint16_t offX = 0, uint16_t offY = 0, jpeg_div_t scale = JPEG_DIV_NONE),
-        GO.lcd.drawJpgFile(SD, path.c_str(), (abs(DISPLAY_WIDTH - TILE_SIZE)));
-      } else {
-        GO.lcd.println("");
-        GO.lcd.println("Debug:\nFile not found.");
-        Serial.println("File not found.");
-      }
+    if (posX < DISPLAY_SIZE/2 - TILE_SIZE/4) {
+      tileX -= 0.5;
+      posX  += TILE_SIZE/2;
     }
+    else if (posX >= DISPLAY_SIZE/2 + TILE_SIZE/4) {
+      tileX += 0.5;
+      posX  -= TILE_SIZE/2;
+    }
+
+    if (posY < DISPLAY_SIZE/2 - TILE_SIZE/4) {
+      tileY -= 0.5;
+      posY += TILE_SIZE/2;
+    }
+    else if (posY >= DISPLAY_SIZE/2 + TILE_SIZE/4) {
+      tileY += 0.5;
+      posY  -= TILE_SIZE/2;
+    }
+
+    drawTile(tileX,tileY);
+
     if (tileX_Off == 0 && tileY_Off == 0) {
       GO.lcd.fillCircle(int32_t(posX), int32_t(posY), 4, BLUE);
       GO.lcd.fillCircle(int32_t(posX), int32_t(posY), 2, RED);
     }
-    GO.lcd.fillRect(0, 0, abs(DISPLAY_WIDTH - TILE_SIZE), DISPLAY_HEIGHT, BLACK);
+    GO.lcd.fillRect(0, 0, abs(DISPLAY_WIDTH - DISPLAY_SIZE), DISPLAY_HEIGHT, BLACK);
     GO.lcd.setCursor(0, 0);
     GO.lcd.println("Battery:" + String(GO.battery.getPercentage()) + "%");
     GO.lcd.println("GPS Fix:" + String(fuGPS.hasFix()));
@@ -259,9 +317,6 @@ void loop()
     Serial.println(zoom);
     Serial.println(String(lon_deg, 6));
     Serial.println(String(lat_rad, 6));
-
-    old_tileX = tileX;
-    old_tileY = tileY;
   }
 
   old_lat_rad = lat_rad;

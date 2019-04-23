@@ -30,9 +30,11 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(115200);
   GO.begin();
-  for (int i=0;i<3;i++) {
-    delay(500);
-    Serial.printf("Booting...%d\n", i);
+  if (0) {
+    for (int i=0;i<5;i++) {
+      delay(500);
+      Serial.printf("Booting...%d\n", i);
+    }
   }
   GO.Speaker.setVolume(0);
   pinMode(25, OUTPUT);
@@ -144,6 +146,10 @@ static void drawTile(double tileX, double tileY)
 void loop()
 {
   GO.update();
+  if (0) {
+    static int loops;
+    Serial.printf("Running...%d\r", loops++);
+  }
   if (GO.JOY_Y.wasAxisPressed() == 2) {
     tileY_Off -= 0.5;
   }

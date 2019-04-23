@@ -272,7 +272,7 @@ void loop()
     //fractional part is the position of the your coordinats in the tile
     posX = modf(tileX , &intpart);
     posY = modf(tileY , &intpart);
-    posX = (posX * TILE_SIZE) + (abs(DISPLAY_WIDTH - DISPLAY_SIZE));
+    posX = (posX * TILE_SIZE);
     posY = (posY * TILE_SIZE);
 
     if (posX < DISPLAY_SIZE/2 - TILE_SIZE/4) {
@@ -295,9 +295,12 @@ void loop()
 
     drawTile(tileX,tileY);
 
-    if (tileX_Off == 0 && tileY_Off == 0) {
-      GO.lcd.fillCircle(int32_t(posX), int32_t(posY), 4, BLUE);
-      GO.lcd.fillCircle(int32_t(posX), int32_t(posY), 2, RED);
+    if (posX - tileX_Off*TILE_SIZE >= 0              &&
+        posX - tileX_Off*TILE_SIZE <  DISPLAY_SIZE   &&
+        posY - tileY_Off*TILE_SIZE >= 0              &&
+        posY - tileY_Off*TILE_SIZE <  DISPLAY_HEIGHT) {
+      GO.lcd.fillCircle(int32_t(posX-tileX_Off*TILE_SIZE) + (abs(DISPLAY_WIDTH - DISPLAY_SIZE)), int32_t(posY-tileY_Off*TILE_SIZE), 4, BLUE);
+      GO.lcd.fillCircle(int32_t(posX-tileX_Off*TILE_SIZE) + (abs(DISPLAY_WIDTH - DISPLAY_SIZE)), int32_t(posY-tileY_Off*TILE_SIZE), 2, RED);
     }
     GO.lcd.fillRect(0, 0, abs(DISPLAY_WIDTH - DISPLAY_SIZE), DISPLAY_HEIGHT, BLACK);
     GO.lcd.setCursor(0, 0);
